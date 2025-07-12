@@ -1,4 +1,4 @@
-$VMName = "AzL51M"
+$VMName = "AzL51M-VM"
 $VSwitchName = "PeteyPie Virtual Switch"
 
 Add-VmNetworkAdapter -VmName $VMName -Name "NIC1"

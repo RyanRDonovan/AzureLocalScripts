@@ -1,13 +1,13 @@
-$VMName = "AzLocal51M"
+$VMName = "AzL51M-VM"
 $ManagementIP = "192.168.2.115"
 $GatewayIP = "192.168.2.1"
 $DNSIP = "192.168.2.3"
 
 echo "Parameters"
-echo "VMName = " $VMName
-echo "ManagementIP = " $ManagementIP
-echo "GatewayIP = " $GatewayIP
-echo "DNSIP = " $DNSIP
+echo "VMName =  $VMName"
+echo "ManagementIP = $ManagementIP"
+echo "GatewayIP = $GatewayIP"
+echo "DNSIP = $DNSIP"
 echo ""
 
 $Node1macNIC1 = Get-VMNetworkAdapter -VMName $VMName -Name "NIC1"
@@ -46,10 +46,10 @@ Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Set-NetIPInterfac
 echo "DHCP Disabled"
 
 
-Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {New-NetIPAddress -InterfaceAlias "NIC1" -IPAddress $ManagementIP -PrefixLength 24 -AddressFamily IPv4 -DefaultGateway $GatewayIP}
+Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {param($ManagementIP, $GatewayIP) New-NetIPAddress -InterfaceAlias "NIC1" -IPAddress $ManagementIP -PrefixLength 24 -AddressFamily IPv4 -DefaultGateway $GatewayIP} -ArgumentList $ManagementIP, $GatewayIP
 echo "Static IP Set"
 
-Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Set-DnsClientServerAddress -InterfaceAlias "NIC1" -ServerAddresses $DNSIP}
+Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {param($DNSIP) Set-DnsClientServerAddress -InterfaceAlias "NIC1" -ServerAddresses $DNSIP} -ArgumentList $DNSIP
 echo "DNS Set"
 
 Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All }
