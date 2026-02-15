@@ -1,10 +1,10 @@
-$VMName = "AzL51M-VM"
-$VSwitchName = "PeteyPie Virtual Switch"
+$VMName = "AzL51M-2601-VM"
+$VSwitchName = "ModernWDS Virtual Switch"
 
 Add-VmNetworkAdapter -VmName $VMName -Name "NIC1"
 Add-VmNetworkAdapter -VmName $VMName -Name "NIC2"
-Add-VmNetworkAdapter -VmName $VMName -Name "NIC3"
-Add-VmNetworkAdapter -VmName $VMName -Name "NIC4"
+#Add-VmNetworkAdapter -VmName $VMName -Name "NIC3"
+#Add-VmNetworkAdapter -VmName $VMName -Name "NIC4"
 
 Get-VmNetworkAdapter -VmName $VMName |Connect-VmNetworkAdapter -SwitchName $VSwitchName
 
