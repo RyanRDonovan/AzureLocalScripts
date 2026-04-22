@@ -1,4 +1,8 @@
 $VMName = "AzL51M"
+$IPAddress = "192.168.2.115"
+$PrefixLength = 24
+$DefaultGateway = "192.168.2.1"
+$DNSServer = "192.168.2.3"
 
 echo "Parameters"
 echo "VMName =" $VMName
@@ -14,36 +18,36 @@ $Node1macNIC2.MacAddress
 $Node1finalmacNIC2=$Node1macNIC2.MacAddress|ForEach-Object{($_.Insert(2,"-").Insert(5,"-").Insert(8,"-").Insert(11,"-").Insert(14,"-"))-join " "}
 $Node1finalmacNIC2
 
-$Node1macNIC3 = Get-VMNetworkAdapter -VMName $VMName -Name "NIC3"
-$Node1macNIC3.MacAddress
-$Node1finalmacNIC3=$Node1macNIC3.MacAddress|ForEach-Object{($_.Insert(2,"-").Insert(5,"-").Insert(8,"-").Insert(11,"-").Insert(14,"-"))-join " "}
-$Node1finalmacNIC3
+#$Node1macNIC3 = Get-VMNetworkAdapter -VMName $VMName -Name "NIC3"
+#$Node1macNIC3.MacAddress
+#$Node1finalmacNIC3=$Node1macNIC3.MacAddress|ForEach-Object{($_.Insert(2,"-").Insert(5,"-").Insert(8,"-").Insert(11,"-").Insert(14,"-"))-join " "}
+#$Node1finalmacNIC3
 
-$Node1macNIC4 = Get-VMNetworkAdapter -VMName $VMName -Name "NIC4"
-$Node1macNIC4.MacAddress
-$Node1finalmacNIC4=$Node1macNIC4.MacAddress|ForEach-Object{($_.Insert(2,"-").Insert(5,"-").Insert(8,"-").Insert(11,"-").Insert(14,"-"))-join " "}
-$Node1finalmacNIC4
+#$Node1macNIC4 = Get-VMNetworkAdapter -VMName $VMName -Name "NIC4"
+#$Node1macNIC4.MacAddress
+#$Node1finalmacNIC4=$Node1macNIC4.MacAddress|ForEach-Object{($_.Insert(2,"-").Insert(5,"-").Insert(8,"-").Insert(11,"-").Insert(14,"-"))-join " "}
+#$Node1finalmacNIC4
 
 $cred = Get-Credential
 echo "Credential Set"
 
 Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {param($Node1finalmacNIC1) Get-NetAdapter -Physical | Where-Object {$_.MacAddress -eq $Node1finalmacNIC1} | Rename-NetAdapter -NewName "NIC1"} -ArgumentList $Node1finalmacNIC1
 Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {param($Node1finalmacNIC2) Get-NetAdapter -Physical | Where-Object {$_.MacAddress -eq $Node1finalmacNIC2} | Rename-NetAdapter -NewName "NIC2"} -ArgumentList $Node1finalmacNIC2
-Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {param($Node1finalmacNIC3) Get-NetAdapter -Physical | Where-Object {$_.MacAddress -eq $Node1finalmacNIC3} | Rename-NetAdapter -NewName "NIC3"} -ArgumentList $Node1finalmacNIC3
-Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {param($Node1finalmacNIC4) Get-NetAdapter -Physical | Where-Object {$_.MacAddress -eq $Node1finalmacNIC4} | Rename-NetAdapter -NewName "NIC4"} -ArgumentList $Node1finalmacNIC4
+#Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {param($Node1finalmacNIC3) Get-NetAdapter -Physical | Where-Object {$_.MacAddress -eq $Node1finalmacNIC3} | Rename-NetAdapter -NewName "NIC3"} -ArgumentList $Node1finalmacNIC3
+#Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {param($Node1finalmacNIC4) Get-NetAdapter -Physical | Where-Object {$_.MacAddress -eq $Node1finalmacNIC4} | Rename-NetAdapter -NewName "NIC4"} -ArgumentList $Node1finalmacNIC4
 echo "MACs Renamed"
 
 Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Set-NetIPInterface -InterfaceAlias "NIC1" -Dhcp Disabled}
 Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Set-NetIPInterface -InterfaceAlias "NIC2" -Dhcp Disabled}
-Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Set-NetIPInterface -InterfaceAlias "NIC3" -Dhcp Disabled}
-Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Set-NetIPInterface -InterfaceAlias "NIC4" -Dhcp Disabled}
+#Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Set-NetIPInterface -InterfaceAlias "NIC3" -Dhcp Disabled}
+#Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Set-NetIPInterface -InterfaceAlias "NIC4" -Dhcp Disabled}
 echo "DHCP Disabled"
 
 #Set IP and Gateway within the strings 
-Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {New-NetIPAddress -InterfaceAlias "NIC1" -IPAddress "192.168.2.115" -PrefixLength 24 -AddressFamily IPv4 -DefaultGateway "192.168.2.1"}
+Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {param($IPAddress, $PrefixLength, $DefaultGateway) New-NetIPAddress -InterfaceAlias "NIC1" -IPAddress $IPAddress -PrefixLength $PrefixLength -AddressFamily IPv4 -DefaultGateway $DefaultGateway} -ArgumentList $IPAddress, $PrefixLength, $DefaultGateway
 echo "Static IP Set"
 
-Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Set-DnsClientServerAddress -InterfaceAlias "NIC1" -ServerAddresses "192.168.2.3"}
+Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {param($DNSServer) Set-DnsClientServerAddress -InterfaceAlias "NIC1" -ServerAddresses $DNSServer} -ArgumentList $DNSServer
 echo "DNS Set"
 
 Invoke-Command -VMName $VMName -Credential $cred -ScriptBlock {Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All }
