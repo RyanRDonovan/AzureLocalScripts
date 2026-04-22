@@ -31,6 +31,8 @@ for ($i = 1; $i -le $SD2DiskCount; $i++) {
     Add-VMHardDiskDrive -VMName $VMName -ControllerType SCSI -ControllerNumber 1 -Path $DiskPath
 }
 
+Remove-VMNetworkAdapter -VMName $VMName -Name "Network Adapter"
+
 Add-VmNetworkAdapter -VmName $VMName -Name "NIC1"
 Add-VmNetworkAdapter -VmName $VMName -Name "NIC2"
 #Add-VmNetworkAdapter -VmName $VMName -Name "NIC3"
