@@ -1,10 +1,10 @@
-$VMName = "AzL51M-2601-VM"
-$VSwitchName = "ModernWDS Virtual Switch"
-$VMMemory = 8GB
-$VMProcessorCount = 4
+$VMName = "myvmhostname"
+$VSwitchName = "myvmswitch"
+$VMMemory = 640GB
+$VMProcessorCount = 32
 $VHDPath = "C:\Hyper-V\$VMName\$VMName.vhdx"
 $VHDSizeBytes = 512GB
-$ISOPath = ""
+$ISOPath = "C:\users\default\Downloads\AzureLocal24H2.26100.1742.LCM.12.2603.0.3012.x64.en-us.iso"
 $SD2DiskCount = 5
 $SD2DiskSizeBytes = 1024GB
 

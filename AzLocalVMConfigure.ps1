@@ -1,8 +1,8 @@
-$VMName = "AzL51M"
-$IPAddress = "192.168.2.115"
+$VMName = "myvmhostname"
+$IPAddress = "192.168.1.3"
 $PrefixLength = 24
-$DefaultGateway = "192.168.2.1"
-$DNSServer = "192.168.2.3"
+$DefaultGateway = "192.168.1.1"
+$DNSServer = "192.168.1.2"
 
 echo "Parameters"
 echo "VMName =" $VMName
